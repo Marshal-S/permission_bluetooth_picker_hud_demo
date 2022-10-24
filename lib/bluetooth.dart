@@ -23,7 +23,10 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
       body: Builder(
         builder: (context) {
           return SafeArea(
-            child: isAdvertise ? getAdvertiseWidget() : getPeripheralWidget(),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: isAdvertise ? getAdvertiseWidget() : getPeripheralWidget(),
+            ),
           );
         },
       ),
@@ -31,14 +34,10 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
   }
 
   //开始广播
-  void startAdvertise() {
-    
-  }
+  void startAdvertise() {}
 
   //开始连接设备
-  void startConnectDevice() {
-
-  }
+  void startConnectDevice() {}
 
   void sendMessage(String text) {
     print(text);
@@ -64,28 +63,34 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
               child: const Text("点击切换外设端"),
             ),
             MaterialButton(
-              onPressed: () {
-
-              },
+              onPressed: startAdvertise,
               child: const Text("开始广播"),
             ),
           ],
         ),
         Row(
           children: <Widget>[
-            TextField(
-              controller: _controller,
-              keyboardType: TextInputType.text,
-              // textInputAction: TextInputAction.next,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(
-                hintText: "请输入手机号",//占位符
-                border: InputBorder.none, //去掉底部很丑的线条
-                contentPadding: EdgeInsets.only(left: 5),//设置内边距
+            Expanded(
+              child: SizedBox(
+                height: 40,
+                child: TextField(
+                  controller: _controller,
+                  keyboardType: TextInputType.text,
+                  // textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(
+                    hintText: "请输入手机号", //占位符
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ), //去掉底部很丑的线条
+                    contentPadding: EdgeInsets.only(left: 5), //设置内边距
+                  ),
+                  onSubmitted: sendMessage,
+                ),
               ),
-              onSubmitted: sendMessage,
             ),
-
             MaterialButton(
               onPressed: () {
                 sendMessage(_controller.text);
@@ -94,7 +99,6 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
             ),
           ],
         ),
-
         const Text("接收到的消息", style: TextStyle(color: Colors.black, fontSize: 20)),
         Text(
           reviceText,
@@ -111,41 +115,45 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const Text("外设端(连接别的蓝牙设备)", style: TextStyle(color: Colors.black, fontSize: 20)),
-
         Row(
           children: <Widget>[
             MaterialButton(
               onPressed: () {
                 setState(() {
-                  isAdvertise = true;
+                  isAdvertise = false;
                 });
               },
               child: const Text("点击切换广播端"),
             ),
             MaterialButton(
-              onPressed: () {
-
-              },
+              onPressed: startConnectDevice,
               child: const Text("连接设备"),
             ),
           ],
         ),
-
         Row(
           children: <Widget>[
-            TextField(
-              controller: _controller,
-              keyboardType: TextInputType.text,
-              // textInputAction: TextInputAction.next,
-              textInputAction: TextInputAction.done,
-              decoration: const InputDecoration(
-                hintText: "请输入手机号",//占位符
-                border: InputBorder.none, //去掉底部很丑的线条
-                contentPadding: EdgeInsets.only(left: 5),//设置内边距
+            Expanded(
+              child: SizedBox(
+                height: 40,
+                child: TextField(
+                  controller: _controller,
+                  keyboardType: TextInputType.text,
+                  // textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
+                  decoration: const InputDecoration(
+                    hintText: "请输入手机号", //占位符
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(10),
+                      ),
+                    ), //去掉底部很丑的线条
+                    contentPadding: EdgeInsets.only(left: 5), //设置内边距
+                  ),
+                  onSubmitted: sendMessage,
+                ),
               ),
-              onSubmitted: sendMessage,
             ),
-
             MaterialButton(
               onPressed: () {
                 sendMessage(_controller.text);
@@ -154,7 +162,6 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
             ),
           ],
         ),
-
         const Text("接收到的消息", style: TextStyle(color: Colors.black, fontSize: 20)),
         Text(
           reviceText,
