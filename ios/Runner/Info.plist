@@ -4,12 +4,12 @@
 <dict>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>$(PRODUCT_BUNDLE_NAME)想使用您的蓝牙，以便于持续跟设备连接发送信息</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+    <string>$(PRODUCT_BUNDLE_NAME)想使用您的蓝牙，以便于跟设备发送信息</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_BUNDLE_NAME)想在app持续获取您的定位，以便于及时更新位置</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_BUNDLE_NAME)想在app使用期间获取您的定位，以便于更新位置</string>
-	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>$(PRODUCT_BUNDLE_NAME)想使用您的蓝牙，以便于跟设备发送信息</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>$(PRODUCT_BUNDLE_NAME)想使用您的媒体资料库</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

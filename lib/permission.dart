@@ -27,7 +27,7 @@ class PermissionTestWidget extends StatelessWidget {
                     onPressed: () async {
                       //常见的有下面几种状态
                       /*
-                      denied, //没授权默认是这个，也保不准那个是表示拒绝的，最好是先请求权限后用于判断
+                      denied, //没授权默认是这个，也保不准特殊情况是表示拒绝的，最好是先请求权限后用于判断
                       granted, //正常使用
                       restricted, //被操作系统拒绝，例如家长控制等
                       limited, //被限制了部分功能，适用于部分权限，例如相册的
@@ -87,6 +87,7 @@ class PermissionTestWidget extends StatelessWidget {
                       //查看相册，如果只是添加，可以采用 photosAddOnly(这里测试同时请求多个的方法)
                       Map<Permission, PermissionStatus> statuses = await [
                         Permission.photosAddOnly,
+                        Permission.photos
                       ].request();
                       print(statuses);
                       if (statuses[Permission.photosAddOnly] != PermissionStatus.granted) {
@@ -94,8 +95,9 @@ class PermissionTestWidget extends StatelessWidget {
                         print("写入相册权限被拒绝");
                         return;
                       }
+                      // final data = await http.get('imgurl')
                       // final result = await ImageGallerySaver.saveImage(
-                      //     Uint8List.fromList(data), //data字节数组
+                      //     Uint8List.fromList(data), //data图片字节数组
                       //     quality: 60, //压缩质量 0~100
                       //     name: "hello"//名字
                       // );
