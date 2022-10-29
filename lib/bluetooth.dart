@@ -103,20 +103,23 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
   //开始扫描并连接设备
   void startConnectDevice() {
     print("开始扫描");
-    _bluetooth.startScan(timeout: const Duration(seconds: 20),);
+    _bluetooth.startScan(scanMode: ScanMode.balanced, timeout: const Duration(seconds: 30),);
+    bool isSearched = false; //为了避免连接过程中没有停止扫描导致的多次连接问题，但不得不连接后在取消扫描
     _bluetooth.scanResults.listen((results) async {
       //扫描回调，try-catch是统一处理里面的失败情况
+      if (isSearched) return; //已经找到了就结束
       try {
         for (ScanResult res in results) {
           final device = res.device;
           //检查是否是我们需要的设备
-          print(device.name);
-          if (device.name.contains("marshal_")) {
+          if (device.name != "") print(device.name);
+          if (!isSearched && device.name.contains("marshal_")) {
             print("找到了我们需要的设备");
+            isSearched = true; //标记已经找到了
             //找到了我们要连接的设备,并连接
             await device.connect(timeout: const Duration(seconds: 10),);
             print("连接成功");
-            //连接成功后停止扫描
+            //连接成功后停止扫描，有些手机停止扫描会出现功能异常，连接成功后在断开连接
             _bluetooth.stopScan();
             //开始查找服务
             print("开始查找服务");
@@ -132,6 +135,7 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
                   print("找到特征值");
                   //假设我们用这个,获取到特征值后保存，可以用来读写
                   _currentCharacteristic = char;
+                  readMessage();
                 }
               }
             });
