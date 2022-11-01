@@ -102,23 +102,23 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
   //开始扫描并连接设备
   Future<void> startConnectDevice({isRepeat = false}) async {
     bool isSearched = false; //为了避免连接过程中没有停止扫描导致的多次连接问题，但不得不连接后在取消扫描
-    await _bluetooth.stopScan();
     try {
       _bluetooth.scanResults.listen((results) async {
         //扫描回调，try-catch是统一处理里面的失败情况
         if (isSearched) return; //已经找到了就结束
         for (ScanResult res in results) {
           final device = res.device;
-          //检查是否是我们需要的设备
-          if (device.name != "") print(device.name);
-          if (!isSearched && device.name.contains("marshal_")) {
+          //检查是否是我们需要的设备，device.name有时候不一定会有,最好使用advertisementData.localName
+          final name = res.advertisementData.localName;
+          if (name != "") print(name);
+          if (!isSearched && name.contains("marshal_")) {
             print("找到了我们需要的设备");
             isSearched = true; //标记已经找到了
             //找到了我们要连接的设备,并连接,autoConnect需要设置为 false，默认为true其不会自动连接
             print("开始连接");
-            await device.connect(timeout: const Duration(seconds: 10), autoConnect: false);
+            await device.connect(timeout: const Duration(seconds: 10), autoConnect: true);
             print("连接成功");
-            // 连接成功后停止扫描，据说有些手机停止扫描会出现连接功能异常，连接成功后在断开连接
+            // 连接成功后停止扫描，据说有些android手机停止扫描会出现连接功能异常，连接成功后在停止扫描
             await _bluetooth.stopScan();
             //开始查找服务
             print("开始查找服务");
@@ -156,22 +156,26 @@ class _BluetoothTestWidgetState extends State<BluetoothTestWidget> {
   }
 
   void setNotifiy() {
+    //可以监听外设端主动发送过来的消息
     _currentCharacteristic!.setNotifyValue(true);
     _currentCharacteristic!.value.listen((event) {
       print(event);
     });
   }
 
+  //读取外设消息
   Future<void> readMessage() async {
     if (_currentCharacteristic == null) return;
 
     List<int> value = await _currentCharacteristic!.read();
-    final string = String.fromCharCodes(value);
-    _controller.text = string;
+    final string = utf8.decode(value);
+    setState(() {
+      reviceText = string;
+    });
     print(string);
   }
 
-  //发送消息
+  //向外设发送消息
   void sendMessage(String text) {
     print(text);
     _controller.clear();
