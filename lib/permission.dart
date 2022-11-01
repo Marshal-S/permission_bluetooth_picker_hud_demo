@@ -133,15 +133,9 @@ class PermissionTestWidget extends StatelessWidget {
                   ),
                   MaterialButton(
                     onPressed: () {
-                      Permission.bluetooth.status.then((status) {
+                      //在android蓝牙分为多个权限，都要动态申请,因此就一起申请了即可
+                      [Permission.bluetoothScan, Permission.bluetoothConnect, Permission.bluetooth].request().then((status) {
                         print(status);
-                        if (status == PermissionStatus.denied || status == PermissionStatus.permanentlyDenied) {
-                          //拒绝
-                          showToast(context, "蓝牙权限被拒绝");
-                        }else if (status == PermissionStatus.granted) {
-                          //正常访问
-                          showToast(context, "蓝牙权限可以正常使用");
-                        }
                       });
                     },
                     child: const Text("进入蓝牙测试界面"),
